@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài tập 35a - Form Đăng Ký Tài Khoản</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Khung Form Responsive: tự co giãn trên điện thoại và giới hạn tối đa 440px trên PC */
+    .register-card {
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .register-card h1 {
+      text-align: center;
+      color: #1e3a8a;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .student-tag {
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Nút ẩn/hiện mật khẩu */
+    .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-pwd:hover {
+      color: #2563eb;
+    }
+
+    /* Dòng báo lỗi dưới từng ô nhập */
+    .error-text {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Trạng thái ô nhập bị lỗi */
+    .form-group.invalid input {
+      border-color: #dc2626;
+    }
+
+    .form-group.invalid .error-text {
+      display: block;
+    }
+
+    /* Checkbox đồng ý điều khoản */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 13px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* Thông báo đăng ký thành công */
+    .success-box {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      background-color: #dcfce7;
+      border: 1px solid #4ade80;
+      color: #166534;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 500;
+    }
+    /* Responsive cho màn hình điện thoại nhỏ */
+    @media (max-width: 480px) {
+      .register-card {
+        padding: 24px 18px;
+      }
+      .register-card h1 {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-card">
+    <h1>Đăng Ký Tài Khoản</h1>
+    <p class="student-tag">SV: Trần Tuấn Kiệt | MSSV: [Điền Mã SV của bạn]</p>
+    <!-- novalidate để tắt popup mặc định của trình duyệt và dùng JS kiểm soát hoàn toàn -->
+    <form id="registerForm" novalidate>
+      <!-- Trường Họ và tên -->
+      <div class="form-group" id="nameGroup">
+        <label for="fullName">Họ và tên</label>
+        <input type="text" id="fullName" placeholder="Nhập họ tên của bạn" autocomplete="name">
+        <div class="error-text" id="nameError">Vui lòng nhập họ tên (ít nhất 2 ký tự).</div>
+      </div>
+      <!-- Trường Email -->
+      <div class="form-group" id="emailGroup">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="example@gmail.com" autocomplete="email">
+        <div class="error-text" id="emailError">Vui lòng nhập địa chỉ email hợp lệ.</div>
+      </div>
+      <!-- Trường Mật khẩu (ẩn) -->
+      <div class="form-group" id="passwordGroup">
+        <label for="password">Mật khẩu</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder="Tối thiểu 8 ký tự (Hoa, thường, số)">
+          <button type="button" class="toggle-pwd" id="togglePwdBtn">Hiện</button>
+        </div>
+        <div class="error-text" id="passwordError">Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.</div>
+      </div>
+      <!-- Checkbox Đồng ý điều khoản -->
+      <div class="form-group" id="termsGroup">
+        <div class="checkbox-group">
+          <input type="checkbox" id="agreeTerms">
+          <label for="agreeTerms">Tôi đã đọc và đồng ý với các Điều khoản dịch vụ & Chính sách bảo mật.</label>
+        </div>
+        <div class="error-text" id="termsError">Bạn phải đồng ý với điều khoản để tiếp tục.</div>
+      </div>
+
+      <button type="submit" class="btn-submit">Đăng Ký Ngay</button>
+    </form>
+
+    <div class="success-box" id="successBox"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const agreeTermsInput = document.getElementById('agreeTerms');
+    const togglePwdBtn = document.getElementById('togglePwdBtn');
+    const successBox = document.getElementById('successBox');
+
+    // Các nhóm chứa để bật/tắt class báo lỗi
+    const nameGroup = document.getElementById('nameGroup');
+    const emailGroup = document.getElementById('emailGroup');
+    const passwordGroup = document.getElementById('passwordGroup');
+    const termsGroup = document.getElementById('termsGroup');
+
+    // Chức năng Ẩn/Hiện mật khẩu tiện lợi cho người dùng
+    togglePwdBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePwdBtn.textContent = isPassword ? 'Ẩn' : 'Hiện';
+    });
+
+    // Hàm băm (Hash) mật khẩu bằng Web Crypto API (SHA-256) trước khi lưu LocalStorage
+    async function hashPassword(plainPassword) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plainPassword);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Hàm kiểm tra tính hợp lệ của từng trường
+    function validateForm() {
+      let isValid = true;
+
+      // 1. Kiểm tra Tên (không được rỗng và ít nhất 2 ký tự sau khi cắt khoảng trắng)
+      const nameVal = fullNameInput.value.trim();
+      if (nameVal.length < 2) {
+        nameGroup.classList.add('invalid');
+        isValid = false;
+      } else {
+        nameGroup.classList.remove('invalid');
+      }
+
+      // 2. Kiểm tra Email hợp lệ bằng biểu thức chính quy (Regex)
+      const emailVal = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailVal)) {
+        emailGroup.classList.add('invalid');
+        isValid = false;
+      } else {
+        emailGroup.classList.remove('invalid');
+      }
+
+      // 3. Kiểm tra Mật khẩu: ít nhất 8 ký tự, có chữ hoa (?=.*[A-Z]), chữ thường (?=.*[a-z]), số (?=.*\d)
+      const pwdVal = passwordInput.value;
+      const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+      if (!pwdRegex.test(pwdVal)) {
+        passwordGroup.classList.add('invalid');
+        isValid = false;
+      } else {
+        passwordGroup.classList.remove('invalid');
+      }
+
+      // 4. Kiểm tra Checkbox Đồng ý điều khoản
+      if (!agreeTermsInput.checked) {
+        termsGroup.classList.add('invalid');
+        isValid = false;
+      } else {
+        termsGroup.classList.remove('invalid');
+      }
+
+      return isValid;
+    }
+
+    // Xử lý sự kiện Submit Form
+    form.addEventListener('submit', async (event) => {
+      // Ngăn hành vi tải lại trang mặc định của trình duyệt
+      event.preventDefault();
+      successBox.style.display = 'none';
+
+      // Chạy kiểm tra dữ liệu đầu vào
+      if (!validateForm()) {
+        return; // Dừng lại nếu có bất kỳ trường nào sai
+      }
+
+      // Băm mật khẩu sang chuỗi mã hóa SHA-256 (tuyệt đối không lưu mật khẩu thô)
+      const hashedPassword = await hashPassword(passwordInput.value);
+
+      // Tạo đối tượng thông tin người dùng đã làm sạch
+      const newUser = {
+        fullName: fullNameInput.value.trim(),
+        email: emailInput.value.trim().toLowerCase(),
+        passwordHash: hashedPassword,
+        agreedToTerms: true,
+        registeredAt: new Date().toISOString()
+      };
+      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+      existingUsers.push(newUser);
+      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+      successBox.textContent = `Đăng ký thành công! Chào mừng ${newUser.fullName} (${newUser.email}). Dữ liệu đã được mã hóa và lưu vào LocalStorage.`;
+      successBox.style.display = 'block';
+      form.reset();
+    });
+  </script>
+</body>
+</html>
